@@ -234,65 +234,77 @@ Name: time_infec, dtype: float64
 clustering_metric = pd.Series(nx.clustering(graph)).sort_index()
 clustering_metric.head()
 ```
-
-```python
+```
+ABE    1.000000
+ABI    0.000000
+ABQ    0.647783
+ABY    0.000000
+ACT    0.000000
+dtype: float64
 ```
 
 ```python
+# Вывод степени графа
+degree_metric = pd.Series(dict(nx.degree(graph))).sort_index()
+degree_metric.head()
+```
+```
+ABE     5
+ABI     1
+ABQ    29
+ABY     1
+ACT     1
+dtype: int64
 ```
 
 ```python
+# Вывод центральности графа
+centrality_metric = pd.Series(nx.betweenness_centrality(graph)).sort_index()
+centrality_metric.head()
+```
+```
+ABE    0.000000
+ABI    0.000000
+ABQ    0.002584
+ABY    0.000000
+ACT    0.000000
+dtype: float64
 ```
 
 ```python
+# Определение размера диаграммы
+fig, axes = plt.subplots(1, 3, figsize=(18, 4))
+
+# Построение диаграмм рассеивания для метрик
+sns.scatterplot(x=median_metric, y=clustering_metric, ax=axes[0])
+sns.scatterplot(x=median_metric, y=degree_metric, ax=axes[1])
+sns.scatterplot(x=median_metric, y=centrality_metric, ax=axes[2])
+
+# Вывод подписей оси абсцисс и оси ординат
+axes[0].set(xlabel='Медианное время заражения', ylabel='Коэффициент кластеризации')
+axes[1].set(xlabel='Медианное время заражения', ylabel='Коэффициент степени')
+axes[2].set(xlabel='Медианное время заражения', ylabel='Коэффициент центральности')
+
+# Вывод диаграммы
+plt.show()
 ```
+![png](Images/chart03.jpg)
 
 ```python
+# Расчет ранговой корреляции Спирмена для полученных метрик графа
+coef, p_value = spearmanr(median_metric, clustering_metric)
+print('Коэффициент Спирмена для Median и Clustering:  coef={:.2f}  p-value={:.2f}'.format(coef, p_value))
+
+coef, p_value = spearmanr(median_metric, degree_metric)
+print('Коэффициент Спирмена для Median и Degree:      coef={:.2f}  p-value={:.2f}'.format(coef, p_value))
+
+coef, p_value = spearmanr(median_metric, centrality_metric)
+print('Коэффициент Спирмена для Median и Centrality:  coef={:.2f}  p-value={:.2f}'.format(coef, p_value))
 ```
-
-```python
 ```
-
-```python
+Коэффициент Спирмена для Median и Clustering:  coef=0.07  p-value=0.23
+Коэффициент Спирмена для Median и Degree:      coef=-0.05  p-value=0.37
+Коэффициент Спирмена для Median и Centrality:  coef=-0.05  p-value=0.40
 ```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-```python
-```
-
-
+### Вывод и заключения
+Визуальная оценка с помощью диаграмм рассеивания показывает, что линейной статистической зависимости между метриками **Clustering**, **Degree**, **Centrality** и **Медианным временем заражения** нет. Что также подтверждает коэффициент ранговой корреляции Спирмена (значения близки к нулю) и p-value (значения больше уровня значимости alpha=0.05).
