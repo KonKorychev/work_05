@@ -19,7 +19,7 @@ import networkx as nx
 # Импорт библиотеки научных вычислений
 from scipy.stats import spearmanr
 ```
-
+## Загрузка исходных данных
 ```python
 # Загрузка исходных данных об аэропортах
 airport_data = pd.read_csv('US_airport_id_info.csv')
